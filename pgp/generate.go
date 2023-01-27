@@ -1,8 +1,7 @@
 package pgp
 
 import (
-	"encoding/hex"
-	"github.com/ProtonMail/gopenpgp/v2/helper"
+	"github.com/ProtonMail/gopenpgp/v2/crypto"
 )
 
 type KeyParam struct {
@@ -14,18 +13,33 @@ type KeyParam struct {
 	rsaBits int
 }
 
-func GenerateKey(params *KeyParam) (*KeyRSA, error) {
-	// KeyRSA, string
-	rsaKey, err := helper.GenerateKey(params.Name, params.Email, params.Passphrase, params.keyType, params.rsaBits)
+func GenerateKeyArmor(params *KeyParam) (*RsaArmor, error) {
+	generatedKey, err := crypto.GenerateKey(params.Name, params.Email, params.keyType, params.rsaBits)
 	if err != nil {
 		return nil, err
 	}
 
-	// KeyRSA, hex
-	return &KeyRSA{
+	if params.Passphrase != nil && len(params.Passphrase) > 0 {
+		generatedKey, err = generatedKey.Lock(params.Passphrase)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	publicKey, err := generatedKey.GetArmoredPublicKey()
+	if err != nil {
+		return nil, err
+	}
+	privateKey, err := generatedKey.Armor()
+	if err != nil {
+		return nil, err
+	}
+
+	// RsaArmor, hex
+	return &RsaArmor{
 		Passphrase: params.Passphrase,
 
-		Private: rsaKey,
-		Hex:     hex.EncodeToString([]byte(rsaKey)),
+		Private: privateKey,
+		Pubkey:  publicKey,
 	}, nil
 }
