@@ -1,0 +1,26 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="build/wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("build/pgp.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+
+        function handle(x) {
+            console.log(x)
+            let data = JSON.parse(x)
+            let prettyData = JSON.stringify(data, null, 4)
+            window.document.getElementById('json-data').innerHTML = prettyData.replace(/\\n/g, "<br>")
+        }
+    </script>
+</head>
+<body>
+<button onclick="handle(window.generateKey('Lugon','lugon@alphatrue.com','passphrase'))">Generate key</button>
+<br>
+<pre id="json-data">
+
+</pre>
+</body>
+</html>
