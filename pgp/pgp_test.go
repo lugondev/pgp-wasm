@@ -19,9 +19,8 @@ func TestDetached(t *testing.T) {
 		Email:      email,
 		Passphrase: passphrase,
 	})
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
+
 	pgpSignature, err := pgpRsa.SignPlainTextWithPrivate(msg)
 	assert.NoError(t, err)
 	assert.NotNil(t, pgpSignature)
@@ -41,9 +40,8 @@ func TestSignPubkey(t *testing.T) {
 		Email:      email,
 		Passphrase: passphrase,
 	})
-	if err != nil {
-		t.Fatal(err)
-	}
+	assert.NoError(t, err)
+
 	fmt.Println("private:", pgpRsa.Private)
 	pgpMsg, err := pgpRsa.EncryptPlainTextWithPubkey(msg)
 	assert.NoError(t, err)
@@ -53,4 +51,19 @@ func TestSignPubkey(t *testing.T) {
 	decrypted, err := pgpRsa.DecryptArmored(pgpMsg)
 	assert.NoError(t, err)
 	assert.Equal(t, decrypted, msg)
+}
+
+func TestGenerateKeyArmor(t *testing.T) {
+	pgpRsa, err := GenerateKeyArmor(&KeyParam{
+		Name:       name,
+		Email:      email,
+		Passphrase: passphrase,
+	})
+	assert.NoError(t, err)
+
+	isValid := IsValidPrivateAndPassphrase(pgpRsa.Private, passphrase)
+	assert.True(t, isValid)
+
+	isInvalid := IsValidPrivateAndPassphrase(pgpRsa.Private, append(passphrase, []byte("invalid")...))
+	assert.False(t, isInvalid)
 }

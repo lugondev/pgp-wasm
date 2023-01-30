@@ -43,3 +43,15 @@ func GenerateKeyArmor(params *KeyParam) (*RsaArmor, error) {
 		Pubkey:  publicKey,
 	}, nil
 }
+
+func IsValidPrivateAndPassphrase(private string, passphrase []byte) bool {
+	privateKeyObj, err := crypto.NewKeyFromArmored(private)
+	if err != nil {
+		return false
+	}
+	_, err = privateKeyObj.Unlock(passphrase)
+	if err != nil {
+		return false
+	}
+	return true
+}
