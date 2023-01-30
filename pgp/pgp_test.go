@@ -1,6 +1,7 @@
 package pgp
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -43,9 +44,11 @@ func TestSignPubkey(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	fmt.Println("private:", pgpRsa.Private)
 	pgpMsg, err := pgpRsa.EncryptPlainTextWithPubkey(msg)
 	assert.NoError(t, err)
 	assert.NotEqual(t, pgpMsg, "")
+	fmt.Println("pgpMsg:", pgpMsg)
 
 	decrypted, err := pgpRsa.DecryptArmored(pgpMsg)
 	assert.NoError(t, err)
