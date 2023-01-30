@@ -1,4 +1,4 @@
-module pgp-wasm
+module github.com/lugondev/pgp-wasm
 
 go 1.19
 
