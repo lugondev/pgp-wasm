@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"pgp-wasm/pgp"
+	"github.com/lugondev/pgp-wasm/pgp"
 )
 
 func main() {
