@@ -2,6 +2,7 @@ package pgp
 
 import (
 	"github.com/ProtonMail/gopenpgp/v2/crypto"
+	"github.com/ProtonMail/gopenpgp/v2/helper"
 )
 
 type KeyParam struct {
@@ -54,4 +55,8 @@ func IsValidPrivateAndPassphrase(private string, passphrase []byte) bool {
 		return false
 	}
 	return true
+}
+
+func EncryptArmored(pubkey, plainText string) (string, error) {
+	return helper.EncryptMessageArmored(pubkey, plainText)
 }
