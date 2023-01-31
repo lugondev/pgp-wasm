@@ -57,6 +57,10 @@ func IsValidPrivateAndPassphrase(private string, passphrase []byte) bool {
 	return true
 }
 
-func EncryptArmored(pubkey, plainText string) (string, error) {
+func EncryptStringArmored(pubkey, plainText string) (string, error) {
 	return helper.EncryptMessageArmored(pubkey, plainText)
+}
+
+func EncryptBinaryArmored(pubkey string, data []byte) (string, error) {
+	return helper.EncryptBinaryMessageArmored(pubkey, data)
 }
