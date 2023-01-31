@@ -64,3 +64,7 @@ func EncryptStringArmored(pubkey, plainText string) (string, error) {
 func EncryptBinaryArmored(pubkey string, data []byte) (string, error) {
 	return helper.EncryptBinaryMessageArmored(pubkey, data)
 }
+
+func DecryptArmored(private string, passphrase []byte, pgpMsg string) (string, error) {
+	return helper.DecryptMessageArmored(private, passphrase, pgpMsg)
+}
